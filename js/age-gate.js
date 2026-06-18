@@ -15,11 +15,14 @@ export function initAgeGate(onVerified) {
     const denyBtn = document.getElementById("ageDenyBtn");
     const errorMsg = document.getElementById("ageGateError");
 
-    // Already verified this session: skip the gate entirely.
     if (isAgeVerified()) {
         gate.hidden = true;
         document.body.classList.remove("age-locked");
-        onVerified();
+
+        if (typeof onVerified === "function") {
+            onVerified();
+        }
+
         return;
     }
 
@@ -27,17 +30,27 @@ export function initAgeGate(onVerified) {
 
     confirmBtn.addEventListener("click", () => {
         sessionStorage.setItem(STORAGE_KEY, "true");
+
         gate.hidden = true;
         document.body.classList.remove("age-locked");
-        onVerified();
+
+        if (typeof onVerified === "function") {
+            onVerified();
+        }
     });
 
     denyBtn.addEventListener("click", () => {
         errorMsg.hidden = false;
+
         confirmBtn.disabled = true;
         denyBtn.disabled = true;
-        gate.querySelector(".age-gate-box").innerHTML =
-            "<h2>Πρόσβαση μη διαθέσιμη</h2>" +
-            "<p>Πρέπει να είσαι 18 ετών ή άνω για να παίξεις αυτό το παιχνίδι. Μπορείς να κλείσεις αυτή τη σελίδα.</p>";
+
+        gate.querySelector(".age-gate-box").innerHTML = `
+            <h2>Access Denied</h2>
+            <p>
+                You must be 18 years of age or older to play this game.
+                You may now close this page.
+            </p>
+        `;
     });
 }
