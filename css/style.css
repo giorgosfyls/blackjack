@@ -37,6 +37,87 @@ body {
     flex-direction: column;
 }
 
+/* ---------- Age Gate ---------- */
+.age-gate {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: rgba(4, 8, 14, 0.92);
+    backdrop-filter: blur(6px);
+}
+.age-gate[hidden] {
+    display: none;
+}
+.age-gate-box {
+    width: 100%;
+    max-width: 420px;
+    background: var(--bg-2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius);
+    padding: 28px 24px;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+.age-gate-box h2 {
+    margin-bottom: 14px;
+    color: var(--text);
+}
+.age-gate-box p {
+    color: var(--muted);
+    line-height: 1.5;
+    margin-bottom: 22px;
+}
+.age-gate-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.age-gate-buttons button {
+    padding: 14px 20px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 10px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+#ageConfirmBtn {
+    background: var(--accent);
+    color: #fff;
+}
+#ageConfirmBtn:hover {
+    background: #16a34a;
+    transform: translateY(-2px);
+}
+.age-deny {
+    background: transparent;
+    color: var(--muted);
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+}
+.age-deny:hover {
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--text);
+}
+.age-gate-error {
+    margin-top: 16px;
+    margin-bottom: 0;
+    color: var(--danger);
+    font-weight: bold;
+}
+
+/* Lock the page behind the age gate */
+body.age-locked .site-header,
+body.age-locked .site-main,
+body.age-locked .site-footer {
+    filter: blur(8px);
+    pointer-events: none;
+    user-select: none;
+}
+
 /* ---------- Header ---------- */
 .site-header {
     text-align: center;

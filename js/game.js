@@ -6,6 +6,7 @@ import { createDeck } from "./deck.js";
 import { calculateScore } from "./rules.js";
 import { renderHands, updateStats, setStatus } from "./ui.js";
 import { loadStats, saveStats } from "./storage.js";
+import { initAgeGate } from "./age-gate.js";
 
 const STATES = { BETTING: "BETTING", PLAYER: "PLAYER", DEALER: "DEALER", GAME_OVER: "GAME_OVER" };
 let state = STATES.BETTING;
@@ -16,7 +17,7 @@ let playerHands = [];
 let activeHand = 0;
 
 let bet = 0;
-let handBet = 0;
+let handBets = []; // bet amount per player hand (supports split + double per hand)
 
 let { balance, wins, losses } = loadStats();
 
@@ -28,6 +29,7 @@ function startGame() {
     deck = createDeck();
     dealerHand = [deck.pop(), deck.pop()];
     playerHands = [[deck.pop(), deck.pop()]];
+    handBets = [bet];
     activeHand = 0;
 
     state = STATES.PLAYER;
@@ -57,11 +59,13 @@ function stand() {
 
 // ------- Double Down -------
 function doubleDown() {
-    if (state !== STATES.PLAYER || balance < handBet) return;
+    if (state !== STATES.PLAYER) return;
+    if (playerHands[activeHand].length !== 2) return; // double only allowed before hitting
+    if (balance < handBets[activeHand]) return;
 
-    balance -= handBet;
-    handBet *= 2;
-    bet = handBet * playerHands.length;
+    balance -= handBets[activeHand];
+    handBets[activeHand] *= 2;
+    bet = handBets.reduce((sum, b) => sum + b, 0);
 
     updateStats(balance, wins, losses, bet);
 
@@ -77,19 +81,21 @@ function split() {
 
     if (
         state !== STATES.PLAYER ||
+        playerHands.length > 1 ||
         hand.length !== 2 ||
-        balance < handBet ||
+        balance < handBets[0] ||
         hand[0].value !== hand[1].value
     ) return;
 
-    balance -= handBet;
+    balance -= handBets[0];
 
     playerHands = [
         [hand[0], deck.pop()],
         [hand[1], deck.pop()]
     ];
+    handBets = [handBets[0], handBets[0]];
 
-    bet = handBet * 2;
+    bet = handBets[0] + handBets[1];
     activeHand = 0;
 
     document.getElementById("playerCards").innerHTML = "";
@@ -126,15 +132,16 @@ function finishGame() {
     const dScore = calculateScore(dealerHand);
     let msgParts = [];
 
-    playerHands.forEach((hand) => {
+    playerHands.forEach((hand, i) => {
         const pScore = calculateScore(hand);
+        const wager = handBets[i];
 
         if (pScore > 21) {
             losses++;
             msgParts.push("Bust!");
         }
         else if (dScore > 21 || pScore > dScore) {
-            balance += handBet * 2;
+            balance += wager * 2;
             wins++;
             msgParts.push("Win!");
         }
@@ -143,7 +150,7 @@ function finishGame() {
             msgParts.push("Lost.");
         }
         else {
-            balance += handBet;
+            balance += wager;
             msgParts.push("Push.");
         }
     });
@@ -166,7 +173,7 @@ function finishGame() {
 function autoNewRound() {
     state = STATES.BETTING;
     bet = 0;
-    handBet = 0;
+    handBets = [];
 
     document.getElementById("playerCards").innerHTML = "";
     document.getElementById("dealerCards").innerHTML = "";
@@ -216,7 +223,6 @@ function init() {
         if (!amount || balance < amount) return;
 
         bet = amount;
-        handBet = amount;
         balance -= amount;
 
         updateStats(balance, wins, losses, bet);
@@ -234,8 +240,12 @@ function init() {
 }
 
 // ------- DOM Ready -------
+function start() {
+    initAgeGate(init);
+}
+
 if (document.readyState === "loading") {
-    window.addEventListener("DOMContentLoaded", init);
+    window.addEventListener("DOMContentLoaded", start);
 } else {
-    init();
+    start();
 }

@@ -7,6 +7,20 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+
+    <!-- Age verification gate -->
+    <div id="ageGate" class="age-gate" role="dialog" aria-modal="true" aria-labelledby="ageGateTitle" aria-describedby="ageGateDesc">
+        <div class="age-gate-box">
+            <h2 id="ageGateTitle">Επιβεβαίωση Ηλικίας</h2>
+            <p id="ageGateDesc">Αυτό το παιχνίδι προσομοιώνει τυχερό παιχνίδι (Blackjack) χωρίς πραγματικά χρήματα. Για να συνεχίσεις, επιβεβαίωσε ότι είσαι 18 ετών ή άνω.</p>
+            <div class="age-gate-buttons">
+                <button id="ageConfirmBtn" type="button">Είμαι 18+ — Είσοδος</button>
+                <button id="ageDenyBtn" type="button" class="age-deny">Είμαι κάτω των 18</button>
+            </div>
+            <p id="ageGateError" class="age-gate-error" role="alert" hidden>Πρέπει να είσαι 18 ετών ή άνω για να παίξεις αυτό το παιχνίδι.</p>
+        </div>
+    </div>
+
     <!-- Header -->
     <header class="site-header" role="banner">
     <h1 id="game-title">Blackjack</h1>
