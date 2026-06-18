@@ -11,13 +11,26 @@
     <!-- Age verification gate -->
     <div id="ageGate" class="age-gate" role="dialog" aria-modal="true" aria-labelledby="ageGateTitle" aria-describedby="ageGateDesc">
         <div class="age-gate-box">
-            <h2 id="ageGateTitle">Επιβεβαίωση Ηλικίας</h2>
-            <p id="ageGateDesc">Αυτό το παιχνίδι προσομοιώνει τυχερό παιχνίδι (Blackjack) χωρίς πραγματικά χρήματα. Για να συνεχίσεις, επιβεβαίωσε ότι είσαι 18 ετών ή άνω.</p>
+            <h2 id="ageGateTitle">Age Verification</h2>
+    
+            <p id="ageGateDesc">
+                This game simulates gambling (Blackjack) without real money.
+                To continue, please confirm that you are 18 years of age or older.
+            </p>
+    
             <div class="age-gate-buttons">
-                <button id="ageConfirmBtn" type="button">Είμαι 18+ — Είσοδος</button>
-                <button id="ageDenyBtn" type="button" class="age-deny">Είμαι κάτω των 18</button>
+                <button id="ageConfirmBtn" type="button">
+                    I am 18+ — Enter
+                </button>
+    
+                <button id="ageDenyBtn" type="button" class="age-deny">
+                    I am under 18
+                </button>
             </div>
-            <p id="ageGateError" class="age-gate-error" role="alert" hidden>Πρέπει να είσαι 18 ετών ή άνω για να παίξεις αυτό το παιχνίδι.</p>
+    
+            <p id="ageGateError" class="age-gate-error" role="alert" hidden>
+                You must be 18 years of age or older to play this game.
+            </p>
         </div>
     </div>
 
